@@ -114,6 +114,15 @@ class merge_course {
                 'enrol' => 'meta', 'id' => $eid), '*', MUST_EXIST);
             $enrol->update_instance($instance, $update);
         }
+        $groups = $DB->get_records('groups', ['courseid' => $newcourse->id]);
+        foreach ($groups as $g) {
+            $matches = [];
+            preg_match('/.{10}([A-Z0-9]{3})/', $g->name, $matches);
+            if (!empty($matches[1])) {
+                $g->name = $matches[1];
+                $DB->update_record('groups', $g);
+            }
+        }
     }
 
     /**
